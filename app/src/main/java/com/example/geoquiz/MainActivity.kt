@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
+    private lateinit var prevButton: Button
     private lateinit var nextButton: Button
     private lateinit var questionTextView: TextView
 
@@ -31,7 +32,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
+        val messageResId = if (userAnswer == questionBank[currentIndex].answer) {
+            R.string.correct_toast
+        } else {
+            R.string.incorrect_toast
+        }
 
+        Toast.makeText(
+            this,
+            messageResId,
+            Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,36 +51,55 @@ class MainActivity : AppCompatActivity() {
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
+        prevButton = findViewById(R.id.prev_button)
         nextButton = findViewById(R.id.next_button)
         questionTextView = findViewById(R.id.question_text_view)
 
         trueButton.setOnClickListener { view: View ->
-
-            val toast = Toast.makeText(
-                this,
-                R.string.correct_toast,
-                Toast.LENGTH_SHORT)
-            toast.show()
-            toast.setGravity(Gravity.TOP, 0, 250)
-            checkAnswer()
+            checkAnswer(true)
         }
 
         falseButton.setOnClickListener { view: View ->
+            checkAnswer(false)
+        }
 
-            val toast = Toast.makeText(
-                this,
-                R.string.incorrect_toast,
-                Toast.LENGTH_SHORT)
-            toast.show()
-            toast.setGravity(Gravity.TOP, 0, 250)
+        prevButton.setOnClickListener { view: View ->
+            currentIndex =
+                if (currentIndex == 0) {
+                questionBank.lastIndex
+                } else {
+                    (currentIndex - 1) % questionBank.size
+                }
+            updateQuestion()
         }
 
         nextButton.setOnClickListener { view: View ->
+            println(currentIndex)
             currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
         }
 
         updateQuestion()
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onStop() {
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }
